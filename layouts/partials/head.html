@@ -42,10 +42,6 @@
     {{ end }}
     <!-- end ogp -->
 
-    {{ if .Site.GoogleAnalytics }}
-    {{ template "_internal/google_analytics.html" . }}
-    {{ end }}
-
     <meta name="keyword"  content="{{ .Site.Params.keyword }}">
     <link rel="shortcut icon" href="{{ "img/favicon.ico" | relURL }}">
 
