@@ -30,9 +30,11 @@
                     </li>
                     {{ if not .Site.Params.omit_categories }}
                         {{ range $name, $taxonomy := .Site.Taxonomies.categories }}
-                        <li>
-                            <a href="{{ "categories/" | relLangURL }}{{ $name | urlize }}">{{ $name }}</a>
-                        </li>
+                            {{ with not (in $.Site.Params.nav_expect_categories $name) }}
+                                <li>
+                                    <a href="{{ "categories/" | relLangURL }}{{ $name | urlize }}">{{ $name }}</a>
+                                </li>
+                            {{ end }}
                         {{ end }}
                     {{ end }}
                     
