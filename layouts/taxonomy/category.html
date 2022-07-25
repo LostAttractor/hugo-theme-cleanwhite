@@ -1,10 +1,18 @@
 {{ define "header" }}
 <!-- Page Header -->
+{{ $finded := false }}
+{{ $findedcategory := "" }}
+{{ range $category := .Site.Params.categories }}
+  {{ if eq (lower $category.name) (lower $.Title) }}
+    {{ $finded = true }}
+    {{ $findedcategory = $category }}
+  {{ end }}
+{{ end }}
 <style type="text/css">
   header.intro-header {
     background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)),
     linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
-    url('{{ if .Params.image }}{{ .Params.image | relURL }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
+    url('{{ if and $finded $findedcategory.image }}{{ $findedcategory.image | relURL }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
   }
 </style>
 {{ if eq .Params.headerstyle "text" }}
@@ -16,15 +24,10 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
                 <div class="site-heading">
-                  {{ $finded := false }}
-                  {{ range $category := .Site.Params.categories }}
-                    {{ if eq (lower $category.name) (lower $.Title) }}
-                      <h1>{{ $category.title }} </h1>
-                      <h2 class="subheading">{{ $category.subtitle }}</h2>
-                      {{ $finded = true }}
-                    {{ end }}
-                  {{ end }}
-                  {{ with not $finded }}
+                  {{ with $finded }}
+                    <h1>{{ $findedcategory.title }} </h1>
+                    <h2 class="subheading">{{ $findedcategory.subtitle }}</h2>
+                  {{ else }}
                     <h1>{{ $.Title }} </h1>
                     <h2 class="subheading">{{ $.Params.subtitle }}</h2>
                   {{ end }}
