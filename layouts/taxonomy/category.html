@@ -12,7 +12,7 @@
   header.intro-header {
     background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)),
     linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
-    url('{{ if and $finded $findedcategory.image }}{{ $findedcategory.image | relURL }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
+    url('{{ if $finded }}{{ if $findedcategory.image }}{{ $findedcategory.image | relURL }}{{ end }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
   }
 </style>
 {{ if eq .Params.headerstyle "text" }}
