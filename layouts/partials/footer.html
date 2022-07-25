@@ -220,6 +220,7 @@
                 </ul>
                 <p class="copyright text-muted">
                     Copyright &copy; {{ .Site.Params.author }} {{ now.Year }} {{- if .Site.Params.icp }} | {{ with .Site.Params.icp }}{{ . | markdownify }}{{ end }}{{- end}}
+                    {{ if .Site.Params.moeicp }} | <a href="https://icp.gov.moe/?keyword={{ .Site.Params.moeicp }}" target="_blank">萌ICP备{{ .Site.Params.moeicp }}号</a>{{ end }}
                     <br>
                     <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> <!--|
                     <iframe
