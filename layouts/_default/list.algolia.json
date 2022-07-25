@@ -1,6 +1,6 @@
 {{/* Generates a valid Algolia search index */}}
 {{- $.Scratch.Add "index" slice -}}
-{{- $section := $.Site.GetPage "/post" }}
+{{- $section := $.Site.GetPage "/posts" }}
 {{- range .Site.AllPages -}}
   {{- if and (.IsDescendant $section) (and (not .Draft) (not .Params.private)) -}}
     {{- if .File -}}
