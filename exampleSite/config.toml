@@ -71,6 +71,7 @@ home = ["HTML", "RSS", "Algolia"]
   email          = "youremail@gmail.com"
   #facebook      = "full profile url in facebook"
   #googleplus    = "full profile url in googleplus"
+  #telegram      = "full profile url in telegram"
   #twitter       = "full profile url in twitter"
   linkedin       = "https://www.linkedin.com/in/yourlinkedinid"
   stackoverflow  = "https://stackoverflow.com/users/yourstackoverflowid"
