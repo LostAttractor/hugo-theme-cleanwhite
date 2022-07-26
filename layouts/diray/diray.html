@@ -1,0 +1,71 @@
+{{ define "header" }}
+  {{ partial "page_header.html" . }}
+{{ end }}
+
+{{ define "main" }}
+{{ $paginator := .Paginate (where .Site.Pages "Section" "diray") }}
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                post-container
+            ">
+
+                {{ .Content }} 
+
+                {{ range $index, $element := $.Paginator.Pages }}
+                    {{ if not (or .Params.hide (eq .Params.layout "diray")) }}
+                        <div class="post-preview">
+                            <a href="{{ .Permalink }}">
+                                <h2 class="diray-title">
+                                    {{ .Title }}
+                                </h2>
+                                {{with .Params.subtitle }}
+                                    <h3 class="diray-subtitle">
+                                        {{ . }}
+                                    </h3>
+                                {{ end }}
+                            </a>
+                            <div class="diray-content">
+                                {{ .Content }}
+                            </div>
+                            <p class="diray-meta">
+                                {{ if .Params.metadata }}
+                                    {{ range $index, $element := .Params.metadata }}
+                                        {{ if .link }}
+                                            <a href="{{ .link }}">{{ .text }}</a>
+                                        {{ else }}
+                                            {{ .text }}
+                                        {{ end }}
+                                    {{ end }}
+                                {{ else }}
+                                    Posted by {{ with .Params.author }}{{ . }}{{ else }}{{ .Site.Params.author }}{{ end }} on {{ .Date.Format "Monday, January 2, 2006" }}
+                                    <!-- Don't show "Last Modified on" if update happened on the same day. -->
+                                    {{ if (and (not .Lastmod.IsZero) (not (eq (dateFormat "2006-01-02" .Lastmod) (dateFormat "2006-01-02" .Date)))) }}
+                                        <br>Last Modified on {{ dateFormat "Monday, January 2, 2006" .Params.LastMod }} 
+                                    {{ end }}
+                                {{ end }}
+                            </p>
+                        </div>
+                        <hr>
+                    {{ end }}
+                {{ end }}
+
+                {{ partial "pagination.html" . }}
+
+            </div>
+            <!-- Sidebar Container -->
+            {{ partial "sidebar.html" . }}
+        </div>
+    </div>
+</article>
+
+{{ end }}
+
+
