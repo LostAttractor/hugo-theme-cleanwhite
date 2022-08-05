@@ -1,5 +1,9 @@
+{{ define "header" }}
+  {{ partial "page_header.html" . }}
+{{ end }}
+
 {{ define "main" }}
-{{ $pages := (where (where .Site.Pages "Type" "posts") "IsPage" true) }}
+{{ $pages := (where (where (where .Site.Pages "Type" "posts") "IsPage" true) "Params.hide" "!=" true) }}
 
 <div class="container">
     <div class="row">

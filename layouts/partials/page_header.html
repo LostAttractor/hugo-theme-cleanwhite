@@ -1,0 +1,26 @@
+<!-- Page Header -->
+<style type="text/css">
+    header.intro-header {
+        background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)),
+        linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
+        url('{{ if .Params.image }}{{ .Params.image | relURL }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
+    }
+</style>
+{{ if eq .Params.headerstyle "text" }}
+<header class="intro-header style-text" >
+{{ else }}
+<header class="intro-header" >
+{{ end }}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>{{ .Title }} </h1>
+                    <!--<hr class="small">-->
+                    <h2 class="subheading">{{ .Params.subtitle }}</h2>
+                    <!-- <span class="subheading">{{ .Site.Params.slogan }}</span> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
