@@ -3,7 +3,7 @@
 {{ end }}
 
 {{ define "main" }}
-{{ $paginator := .Paginate (where .Site.Pages "Section" "diray") }}
+{{ $paginator := .Paginate (where .Site.Pages "Type" "diray") }}
 <!-- Post Content -->
 <article>
     <div class="container">
@@ -20,7 +20,7 @@
                 {{ .Content }} 
 
                 {{ range $index, $element := $.Paginator.Pages }}
-                    {{ if not (or .Params.hide (eq .Params.layout "diray")) }}
+                    {{ if not .Params.hide }}
                         <div class="post-preview">
                             <a href="{{ .Permalink }}">
                                 <h2 class="diray-title">
