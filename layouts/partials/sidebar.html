@@ -13,7 +13,22 @@
         <div class="short-about">
             {{ with .Site.Params.sidebar_avatar }}
             <a href="{{ "/about/" | relLangURL }}">
-                <img src="{{ . | relURL }}" alt="avatar" style="cursor: pointer" />
+                <picture>
+                    {{ $avifPath:= replace (replace (. | relURL) "/img/" "/img_avif/") (path.Ext (. | relURL)) ".avif" }}
+                    {{ $avifPathStatic:= printf "static/%s" $avifPath }}
+                
+                    {{ if (fileExists $avifPathStatic) }}
+                        <source srcset="{{ $avifPath | safeURL }}" type="image/avif" >
+                    {{ end }}
+                
+                    {{ $webpPath:= replace (replace (. | relURL) "/img/" "/img_webp/") (path.Ext (. | relURL)) ".webp" }}
+                    {{ $webpPathStatic:= printf "static/%s" $webpPath }}
+                
+                    {{ if (fileExists $webpPathStatic) }}
+                        <source srcset="{{ $webpPath | safeURL }}" type="image/webp" >
+                    {{ end }}
+                    <img src="{{ . | relURL }}" alt="avatar" style="cursor: pointer" />
+                </picture>
             </a>
             {{ end }}
             {{ with .Site.Params.sidebar_about_description }}

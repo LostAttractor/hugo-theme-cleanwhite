@@ -4,9 +4,42 @@
 {{ partial "nav.html" . }}
 <!-- Page Header -->
 {{ block "header" . }}
-<header class="intro-header" style="background-image: linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
-    linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)), 
-    url('{{ if .Params.image }}{{ .Params.image | relURL }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')">
+
+{{ $imagePath := .Params.image | relURL }}
+{{ if not .Params.image }}
+    {{ $imagePath = .Site.Params.header_image | relURL }}
+{{ end }}
+
+{{ $isJPG := eq (path.Ext $imagePath) ".jpg" }}
+{{ $isPNG := eq (path.Ext $imagePath) ".png" }}
+{{ $isJPEG := eq (path.Ext $imagePath) ".jpeg" }}
+
+{{ if or (or $isJPG $isPNG) $isJPEG }}
+    {{ $avifPath:= replace (replace $imagePath "/img/" "/img_avif/") (path.Ext $imagePath) ".avif" }}
+    {{ $webpPath:= replace (replace $imagePath "/img/" "/img_webp/") (path.Ext $imagePath) ".webp" }}
+    {{ $avifPathStatic:= printf "static/%s" $avifPath }}
+    {{ $webpPathStatic:= printf "static/%s" $webpPath }}
+    <style type="text/css">
+        header.intro-header {
+            background-image: linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
+            linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)), 
+            image-set(
+                '{{ $avifPath }}' type('image/avif'),
+                '{{ $webpPath }}' type('image/webp'),
+                '{{ $imagePath }}' type('image/{{ path.Ext $imagePath }}')
+            )
+        }
+    </style>
+{{ else }}
+    <style type="text/css">
+        header.intro-header {
+            background-image: linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
+            linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)), 
+            url('{{ $imagePath }}')
+        }
+    </style>
+{{ end }}
+<header class="intro-header">
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
@@ -26,4 +59,5 @@
 
 {{ partial "footer.html" . }}
 </body>
+
 </html>

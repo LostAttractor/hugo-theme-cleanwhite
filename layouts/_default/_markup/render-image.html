@@ -4,5 +4,27 @@
     <center><figcaption>{{ .Title }}</figcaption></center>
   </figure>
 {{ else }}
-  <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}">
+  <picture>
+    {{ $isJPG := eq (path.Ext (.Destination | safeURL)) ".jpg" }}
+    {{ $isPNG := eq (path.Ext (.Destination | safeURL)) ".png" }}
+    {{ $isJPEG := eq (path.Ext (.Destination | safeURL)) ".jpeg" }}
+  
+    {{ if or (or $isJPG $isPNG) $isJPEG }}
+      {{ $avifPath:= replace (replace (.Destination | safeURL) "/img/" "/img_avif/") (path.Ext (.Destination | safeURL)) ".avif" }}
+      {{ $avifPathStatic:= printf "static/%s" $avifPath }}
+  
+      {{ if (fileExists $avifPathStatic) }}
+        <source srcset="{{ $avifPath | safeURL }}" type="image/avif" >
+      {{ end }}
+
+      {{ $webpPath:= replace (replace (.Destination | safeURL) "/img/" "/img_webp/") (path.Ext (.Destination | safeURL)) ".webp" }}
+      {{ $webpPathStatic:= printf "static/%s" $webpPath }}
+  
+      {{ if (fileExists $webpPathStatic) }}
+        <source srcset="{{ $webpPath | safeURL }}" type="image/webp" >
+      {{ end }}
+    {{ end }}
+  
+    <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}">
+  </picture>
 {{ end }}

@@ -1,12 +1,40 @@
 {{ define "header" }}
 <!-- Post Header -->
-<style type="text/css">
-    header.intro-header {
-        background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)),
-        linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
-        url('{{ if .Params.image }}{{ .Params.image | relURL }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
-    }
-</style>
+{{ $imagePath := .Params.image | relURL }}
+{{ if not .Params.image }}
+    {{ $imagePath = .Site.Params.header_image | relURL }}
+{{ end }}
+
+{{ $isJPG := eq (path.Ext $imagePath) ".jpg" }}
+{{ $isPNG := eq (path.Ext $imagePath) ".png" }}
+{{ $isJPEG := eq (path.Ext $imagePath) ".jpeg" }}
+
+{{ if or (or $isJPG $isPNG) $isJPEG }}
+    {{ $avifPath:= replace (replace $imagePath "/img/" "/img_avif/") (path.Ext $imagePath) ".avif" }}
+    {{ $webpPath:= replace (replace $imagePath "/img/" "/img_webp/") (path.Ext $imagePath) ".webp" }}
+    {{ $avifPathStatic:= printf "static/%s" $avifPath }}
+    {{ $webpPathStatic:= printf "static/%s" $webpPath }}
+    <style type="text/css">
+        header.intro-header {
+            background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)),
+            linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
+            image-set(
+                '{{ $avifPath }}' type('image/avif'),
+                '{{ $webpPath }}' type('image/webp'),
+                '{{ $imagePath }}' type('image/{{ path.Ext $imagePath }}')
+            )
+        }
+    </style>
+{{ else }}
+    <style type="text/css">
+        header.intro-header {
+            background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)),
+            linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
+            url('{{ $imagePath }}')
+        }
+    </style>
+{{ end }}
+
 {{ if eq .Params.headerstyle "text" }}
 <header class="intro-header style-text" >
 {{ else }}
