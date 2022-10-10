@@ -12,13 +12,21 @@
     {{ $avifPathStatic:= printf "static/%s" $avifPath }}
     {{ $webpPathStatic:= printf "static/%s" $webpPath }}
     <style type="text/css">
-        header.intro-header {
-            background-image: image-set(
-                '{{ $avifPath }}' type('image/avif'),
-                '{{ $webpPath }}' type('image/webp'),
-                '{{ $imagePath }}' type('image/{{ path.Ext $imagePath }}')
-            )
+        .fallback header.intro-header {
+            url('{{ $imagePath }}')
         }
+    
+        {{ if (fileExists $webpPathStatic) }}
+        .webp header.intro-header {
+            url('{{ $webpPath }}')
+        }
+        {{ end }}
+    
+        {{ if (fileExists $webpPathStatic) }}
+        .avif header.intro-header {
+            url('{{ $avifPath }}')
+        }
+        {{ end }}
     </style>
 {{ else }}
     <style type="text/css">

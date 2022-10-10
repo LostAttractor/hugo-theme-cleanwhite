@@ -82,6 +82,9 @@
     <!-- lazy load image JavaScript -->
     <script src="{{ "js/lazysizes.min.js" | relURL }}"></script>
 
+    <!-- AVIF Support detection  JavaScript-->
+    <script src="{{ "js/avif-support-detection.min.js" | relURL }}"></script>
+
     <!-- Custom JS -->
     {{ range .Site.Params.custom_js }}
     <script src="{{ . | absURL }}"></script>

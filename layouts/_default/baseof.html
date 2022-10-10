@@ -7,7 +7,7 @@
 
 {{ $imagePath := .Params.image | relURL }}
 {{ if not .Params.image }}
-    {{ $imagePath = .Site.Params.header_image | relURL }}
+{{ $imagePath = .Site.Params.header_image | relURL }}
 {{ end }}
 
 {{ $isJPG := eq (path.Ext $imagePath) ".jpg" }}
@@ -15,29 +15,41 @@
 {{ $isJPEG := eq (path.Ext $imagePath) ".jpeg" }}
 
 {{ if or (or $isJPG $isPNG) $isJPEG }}
-    {{ $avifPath:= replace (replace $imagePath "/img/" "/img_avif/") (path.Ext $imagePath) ".avif" }}
-    {{ $webpPath:= replace (replace $imagePath "/img/" "/img_webp/") (path.Ext $imagePath) ".webp" }}
-    {{ $avifPathStatic:= printf "static/%s" $avifPath }}
-    {{ $webpPathStatic:= printf "static/%s" $webpPath }}
-    <style type="text/css">
-        header.intro-header {
-            background-image: linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
-            linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)), 
-            image-set(
-                '{{ $avifPath }}' type('image/avif'),
-                '{{ $webpPath }}' type('image/webp'),
-                '{{ $imagePath }}' type('image/{{ path.Ext $imagePath }}')
-            )
-        }
-    </style>
+{{ $avifPath:= replace (replace $imagePath "/img/" "/img_avif/") (path.Ext $imagePath) ".avif" }}
+{{ $webpPath:= replace (replace $imagePath "/img/" "/img_webp/") (path.Ext $imagePath) ".webp" }}
+{{ $avifPathStatic:= printf "static/%s" $avifPath }}
+{{ $webpPathStatic:= printf "static/%s" $webpPath }}
+<style type="text/css">
+    .fallback header.intro-header {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)),
+        linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)),
+        url('{{ $imagePath }}')
+    }
+
+    {{ if (fileExists $webpPathStatic) }}
+    .webp header.intro-header {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)),
+        linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)),
+        url('{{ $webpPath }}')
+    }
+    {{ end }}
+
+    {{ if (fileExists $webpPathStatic) }}
+    .avif header.intro-header {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)),
+        linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)),
+        url('{{ $avifPath }}')
+    }
+    {{ end }}
+</style>
 {{ else }}
-    <style type="text/css">
-        header.intro-header {
-            background-image: linear-gradient(rgba(0,0,0,0.08), rgba(0,0,0,0.08)),
-            linear-gradient(rgba(255,255,255,0.08), rgba(255,255,255,0.08)), 
-            url('{{ $imagePath }}')
-        }
-    </style>
+<style type="text/css">
+    header.intro-header {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.08)),
+        linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)),
+        url('{{ $imagePath }}')
+    }
+</style>
 {{ end }}
 <header class="intro-header">
     <div class="container">
