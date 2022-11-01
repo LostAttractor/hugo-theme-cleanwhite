@@ -15,6 +15,69 @@
     url('{{ if $finded }}{{ if $findedcategory.image }}{{ $findedcategory.image | relURL }}{{ end }}{{ else }}{{ .Site.Params.header_image | relURL}}{{ end }}')
   }
 </style>
+
+{{ $showImage := true }}
+
+{{ $imagePath := .Site.Params.header_image | relURL }}
+{{ if $finded }}
+  {{ if $findedcategory.image }}    
+    {{ $imagePath = $findedcategory.image | relURL }}
+  {{ else }}
+    {{ $showImage = false }}
+  {{ end }}
+{{ end }}
+
+{{ if $showImage }}
+  {{ $isJPG := eq (path.Ext $imagePath) ".jpg" }}
+  {{ $isPNG := eq (path.Ext $imagePath) ".png" }}
+  {{ $isJPEG := eq (path.Ext $imagePath) ".jpeg" }}
+
+  {{ if or (or $isJPG $isPNG) $isJPEG }}
+      {{ $avifPath:= replace (replace $imagePath "/img/" "/img_avif/") (path.Ext $imagePath) ".avif" }}
+      {{ $webpPath:= replace (replace $imagePath "/img/" "/img_webp/") (path.Ext $imagePath) ".webp" }}
+      {{ $avifPathStatic:= printf "static/%s" $avifPath }}
+      {{ $webpPathStatic:= printf "static/%s" $webpPath }}
+      <style type="text/css">
+        .fallback header.intro-header {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+            linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
+            url('{{ $imagePath }}')
+        }
+    
+        {{ if (fileExists $webpPathStatic) }}
+        .webp header.intro-header {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+            linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
+            url('{{ $webpPath }}')
+        }
+        {{ end }}
+    
+        {{ if (fileExists $webpPathStatic) }}
+        .avif header.intro-header {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+            linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
+            url('{{ $avifPath }}')
+        }
+        {{ end }}
+    </style>
+  {{ else }}
+      <style type="text/css">
+          header.intro-header {
+              background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)),
+              linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
+              url('{{ $imagePath }}')
+          }
+      </style>
+  {{ end }}
+{{ else }}
+  <style type="text/css">
+    header.intro-header {
+      background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1)),
+      linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0.1)), 
+    }
+  </style>
+{{ end }}
+
 {{ if eq .Params.headerstyle "text" }}
 <header class="intro-header style-text" >
 {{ else }}

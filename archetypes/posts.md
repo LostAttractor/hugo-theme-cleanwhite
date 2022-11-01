@@ -8,7 +8,7 @@ date: 2018-06-04
 publishdate: 2018-06-04
 lastmod: 2018-06-04
 image: ""
-categories: ["Tech" ]
+categories: [" Tech" ]
 tags:
     - tag1
     - tag2
