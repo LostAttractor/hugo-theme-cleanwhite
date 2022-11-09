@@ -1,5 +1,5 @@
 ---
 layout: "posts"
-title: "An Example Diray"
+title: "An Example Diary"
 date: 2018-06-04
 ---
